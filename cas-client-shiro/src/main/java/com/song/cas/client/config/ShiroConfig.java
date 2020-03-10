@@ -61,8 +61,9 @@ public class ShiroConfig {
 
         //service指定了登录成功后的回调地址，回调/cas将被CasFilter拦截，获取服务端返回的Service Ticket进行登录
         //此处客户端/cas应该是与上方对应，与项目本身无关
+        //TODO 此处增加client属性，目的是采用多少数据源
         shiroFilterFactoryBean.setLoginUrl
-            (serverUrl+"/login?service="+clientUrl+"/cas");
+            (serverUrl+"/login?service="+clientUrl+"/cas&client=client");
         //登录成功后要跳转的链接
         //说明：使用cas后，登陆返回原始请求的url，此配置无用
         shiroFilterFactoryBean.setSuccessUrl("/");
