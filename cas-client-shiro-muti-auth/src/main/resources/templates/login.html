@@ -1,0 +1,57 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>单独登陆</title>
+</head>
+
+<body class="signin">
+
+    <div class="signinpanel">
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+                <div class="title1">
+                    <h1 style="text-align: center">自然资源审计平台</h1>
+                </div>
+                <div id="signupForm">
+                    <h2 class="no-margins">登录页面：</h2>
+
+                    <input type="text"     name="username" class="form-control uname"     placeholder="用户名" value="admin"    />
+                    <input type="password" name="password" class="form-control pword m-b" placeholder="密码"   value="admin123" />
+
+                    <button class="btn btn-success btn-block" id="btnSubmit" data-loading="正在验证登录，请稍后...">登&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script type="text/javascript" src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" src="../static/js/bootstrap.min.js"th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript">
+    $('#btnSubmit').on('click',function () {
+
+      var username = $("input[name='username']").val();
+      var password = $("input[name='password']").val();
+
+      $.ajax({
+        type: "post",
+        url: "/login",
+        data: {
+          "username": username,
+          "password": password
+        },
+        success: function(res) {
+          if (res.success) {
+            location.href =  '/index';
+          } else {
+            console.log("登陆失败")
+          }
+        }
+      });
+
+    })
+</script>
+</body>
+</html>

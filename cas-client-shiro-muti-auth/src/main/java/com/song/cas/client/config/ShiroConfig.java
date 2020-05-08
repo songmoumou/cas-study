@@ -3,19 +3,24 @@ package com.song.cas.client.config;
 
 
 import com.song.cas.client.shiro.MyCasRealm;
+import com.song.cas.client.shiro.UserRealm;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.Filter;
 
 import org.apache.shiro.cas.CasFilter;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -28,9 +33,11 @@ public class ShiroConfig {
     使用tomcat启动时，会加上项目名cas，
     使用idea启动没有cas
     */
+
+
     private String serverUrl="http://localhost:8080/cas";
 
-    private String clientUrl="http://localhost:8081";
+    private String clientUrl="http://localhost:8082";
 
     @Bean
     public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
@@ -48,6 +55,9 @@ public class ShiroConfig {
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
         //anno为匿名，不拦截
         filterChainDefinitionMap.put("/static/**", "anon");
+        //设置不拦截原来登陆页
+        filterChainDefinitionMap.put("/login/**", "anon");
+        filterChainDefinitionMap.put("/js/**", "anon");
         filterChainDefinitionMap.put("/casFailure", "anon");
         //拦截CAS Server返回的ticket
         filterChainDefinitionMap.put("/cas", "cas");
@@ -89,10 +99,26 @@ public class ShiroConfig {
         return casRealm;
     }
 
+    //添加单独验证的Realm
+    @Bean
+    public UserRealm userRealm()
+    {
+        UserRealm userRealm = new UserRealm();
+        return userRealm;
+    }
     @Bean
     public SecurityManager securityManager(){
         DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
+        // 设置realm.
+        //单个
         securityManager.setRealm(casRealm());
+
+        //添加多个Realm
+        List<Realm> realms = new ArrayList<>();
+        realms.add(casRealm());
+        realms.add(userRealm());
+        securityManager.setRealms(realms);
+
         return securityManager;
     }
 
