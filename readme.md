@@ -54,3 +54,9 @@ https://blog.csdn.net/qq_24874939/article/details/84534854
 cas-server 5.3
 https://blog.csdn.net/u011872945/article/details/81047025
 https://blog.csdn.net/qq_36640713/article/details/82049506
+
+
+##rest 参考文献
+https://blog.csdn.net/Anumbrella/article/details/81149249
+rest测试登陆接口(cas-server-rest-login)
+![postMan请求方式](img/rest/rest-login-post.png)
